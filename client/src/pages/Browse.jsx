@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getTrending, getByLanguage } from '../services/contentService';
 import ContentRow from '../components/content/ContentRow';
 
@@ -49,6 +49,7 @@ function Browse() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '20px' }}>
         <h1>Cinovix</h1>
         <div>
+          <Link to="/search" style={{ color: 'white', marginRight: '20px' }}>Search</Link>
           <span style={{ marginRight: '10px' }}>{user?.email}</span>
           <button onClick={handleLogout}>Logout</button>
         </div>
