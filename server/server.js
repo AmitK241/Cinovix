@@ -5,6 +5,9 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
+import myListRoutes from './routes/myListRoutes.js';
+import watchHistoryRoutes from './routes/watchHistoryRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 connectDB();
 
@@ -18,6 +21,9 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/mylist', myListRoutes);
+app.use('/api/watch-history', watchHistoryRoutes);
+app.use('/api/profiles', profileRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

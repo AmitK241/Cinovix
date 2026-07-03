@@ -24,7 +24,7 @@ function Login() {
         : await loginUser(email, password);
 
       login(data);
-      navigate('/browse');
+      navigate('/profiles');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
     } finally {

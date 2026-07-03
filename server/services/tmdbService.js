@@ -50,7 +50,10 @@ export const searchContent = async (query, mediaType = 'movie') => {
 // Get details by ID (for Watch page)
 export const getDetailsById = async (id, mediaType = 'movie') => {
   const response = await tmdbApi.get(`/${mediaType}/${id}`, {
-    params: { append_to_response: 'videos,credits' },
+    params: {
+      append_to_response: 'videos,credits',
+      include_video_language: 'null',
+    },
   });
   return response.data;
 };

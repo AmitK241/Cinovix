@@ -18,6 +18,26 @@ const userSchema = new mongoose.Schema(
       enum: ['free', 'basic', 'standard', 'premium'],
       default: 'free',
     },
+    myList: [
+      {
+        tmdbId: { type: Number, required: true },
+        mediaType: { type: String, default: 'movie' },
+        title: { type: String },
+        poster_path: { type: String },
+        addedAt: { type: Date, default: Date.now },
+      },
+    ],
+    watchHistory: [
+      {
+        tmdbId: { type: Number, required: true },
+        mediaType: { type: String, default: 'movie' },
+        title: { type: String },
+        poster_path: { type: String },
+        progressSeconds: { type: Number, default: 0 },
+        durationSeconds: { type: Number, default: 0 },
+        lastWatched: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
