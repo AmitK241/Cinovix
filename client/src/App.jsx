@@ -8,6 +8,7 @@ import MyList from './pages/MyList';
 import ProfileSelect from './pages/ProfileSelect';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Subscription from './pages/Subscription';
+import Category from './pages/Category';
 
 function App() {
   return (
@@ -62,6 +63,14 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+          path="/category"
+          element={
+            <ProtectedRoute>
+              <Category />
+            </ProtectedRoute>
+          }
+        />
     </Routes>
   );
 }

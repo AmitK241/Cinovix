@@ -83,3 +83,28 @@ export const discoverByMood = async (genreNames, language = null, mediaType = 'm
   const response = await tmdbApi.get(`/discover/${mediaType}`, { params });
   return response.data.results;
 };
+
+export const getSimilarMovies = async (id, mediaType = 'movie') => {
+  const response = await tmdbApi.get(`/${mediaType}/${id}/similar`);
+  return response.data.results;
+};
+
+// Get list of available watch providers (Netflix, Prime, etc.) for India
+export const getWatchProviders = async (mediaType = 'movie') => {
+  const response = await tmdbApi.get(`/watch/providers/${mediaType}`, {
+    params: { watch_region: 'IN' },
+  });
+  return response.data.results;
+};
+
+// Discover movies/shows available on a specific platform
+export const discoverByProvider = async (providerId, mediaType = 'movie') => {
+  const response = await tmdbApi.get(`/discover/${mediaType}`, {
+    params: {
+      with_watch_providers: providerId,
+      watch_region: 'IN',
+      sort_by: 'popularity.desc',
+    },
+  });
+  return response.data.results;
+};

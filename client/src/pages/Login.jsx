@@ -35,7 +35,7 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <h1 className="font-display text-4xl font-bold text-aurora mb-1">Cinovix</h1>
+        <img src="/logo.png" alt="Cinovix" className="h-16 mb-1" />
         <p className="text-muted text-sm mb-8">
           {isSignup ? 'Create your account' : 'Welcome back'}
         </p>

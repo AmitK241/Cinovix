@@ -49,3 +49,18 @@ export const getContinueWatching = async () => {
   const response = await api.get('/watch-history');
   return response.data;
 };
+
+export const getSimilarMovies = async (id, mediaType = 'movie') => {
+  const response = await api.get(`/content/${id}/similar`, { params: { mediaType } });
+  return response.data;
+};
+
+export const getProviders = async (mediaType = 'movie') => {
+  const response = await api.get('/content/providers', { params: { mediaType } });
+  return response.data;
+};
+
+export const getByProvider = async (providerId, mediaType = 'movie') => {
+  const response = await api.get('/content/by-provider', { params: { providerId, mediaType } });
+  return response.data;
+};

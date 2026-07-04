@@ -7,7 +7,7 @@ function Home() {
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
       <div className="flex items-center justify-between px-6 md:px-12 py-6">
-        <h1 className="font-display text-2xl font-bold text-aurora">Cinovix</h1>
+        <img src="/logo.png" alt="Cinovix" className="h-10" />
         <button
           onClick={() => navigate('/login')}
           className="px-5 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-violet to-magenta hover:opacity-90 transition cursor-pointer"

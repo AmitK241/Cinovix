@@ -5,6 +5,7 @@ import { getTrending, getByLanguage, getContinueWatching } from '../services/con
 import { getRecommendations } from '../services/aiService';
 import ContentRow from '../components/content/ContentRow';
 import { useProfile } from '../context/ProfileContext';
+import CategoryDropdown from '../components/navigation/CategoryDropdown';
 
 function Browse() {
   const { user, logout } = useAuth();
@@ -77,39 +78,44 @@ function Browse() {
     <div className="min-h-screen pb-16">
       {/* Navbar */}
       <div className="sticky top-0 z-20 backdrop-blur-md bg-base/70 border-b border-white/5">
-        <div className="flex items-center justify-between px-6 md:px-12 py-4">
-          <h1 className="font-display text-2xl font-bold text-aurora">Cinovix</h1>
+        <div className="flex items-center justify-between px-6 md:px-12 py-4 flex-nowrap">
+          <img
+            src="/logo.png"
+            alt="Cinovix"
+            onClick={() => navigate('/browse')}
+            className="h-9 cursor-pointer flex-shrink-0"
+          />
 
-          <div className="flex items-center gap-6">
-  <Link to="/search" className="text-white/80 hover:text-white text-sm font-medium transition">
-    Search
-  </Link>
-  <Link to="/mylist" className="text-white/80 hover:text-white text-sm font-medium transition">
-    My List
-  </Link>
-  <Link to="/subscription" className="text-white/80 hover:text-white text-sm font-medium transition">
-    Upgrade
-  </Link>
-  {activeProfile && (
-    <img
-      src={activeProfile.avatar}
-      alt={activeProfile.name}
-      onClick={handleSwitchProfile}
-      title="Switch Profile"
-      className="w-8 h-8 rounded-md cursor-pointer border border-white/10 hover:border-violet transition"
-    />
-  )}
-  <span className="text-muted text-sm hidden md:inline">{user?.email}</span>
-  <button
-  onClick={handleLogout}
-  className="px-4 py-1.5 rounded-md text-sm font-medium text-white/90 border border-white/15 hover:border-magenta hover:text-magenta hover:bg-magenta/10 transition cursor-pointer"
->
-  Logout
-</button>
-</div>
+          <div className="flex items-center gap-4 md:gap-6 flex-nowrap flex-shrink-0">
+            <CategoryDropdown />
+            <Link to="/search" className="text-white/80 hover:text-white text-sm font-medium transition whitespace-nowrap">
+              Search
+            </Link>
+            <Link to="/mylist" className="text-white/80 hover:text-white text-sm font-medium transition whitespace-nowrap">
+              My List
+            </Link>
+            <Link to="/subscription" className="text-white/80 hover:text-white text-sm font-medium transition whitespace-nowrap">
+              Upgrade
+            </Link>
+            {activeProfile && (
+              <img
+                src={activeProfile.avatar}
+                alt={activeProfile.name}
+                onClick={handleSwitchProfile}
+                title="Switch Profile"
+                className="w-8 h-8 rounded-md cursor-pointer border border-white/10 hover:border-violet transition flex-shrink-0"
+              />
+            )}
+            <span className="text-muted text-sm hidden lg:inline whitespace-nowrap">{user?.email}</span>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-1.5 rounded-md text-sm font-medium text-white/90 border border-white/15 hover:border-magenta hover:text-magenta hover:bg-magenta/10 transition cursor-pointer whitespace-nowrap flex-shrink-0"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
-
       <div className="pt-8">
         {recommended.length > 0 && (
           <div className="px-6 md:px-12 mb-2">

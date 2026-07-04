@@ -7,7 +7,9 @@ import {
   getMyList,
   updateProgress,
   getProgressById,
+  getSimilarMovies,
 } from '../services/contentService';
+import TitleCard from '../components/content/TitleCard';
 
 function Watch() {
   const { id } = useParams();
@@ -17,6 +19,7 @@ function Watch() {
   const [inMyList, setInMyList] = useState(false);
   const [listLoading, setListLoading] = useState(false);
   const [savedProgress, setSavedProgress] = useState(null);
+  const [similar, setSimilar] = useState([]);
 
   const playerRef = useRef(null);
   const intervalRef = useRef(null);
@@ -32,6 +35,9 @@ function Watch() {
 
         const progress = await getProgressById(id);
         setSavedProgress(progress);
+
+        const similarData = await getSimilarMovies(id, 'movie');
+        setSimilar(similarData);
       } catch (error) {
         console.error('Error fetching details:', error);
       } finally {
@@ -172,9 +178,16 @@ function Watch() {
         <div className="absolute inset-0 bg-gradient-to-t from-base from-10% via-base/70 via-50% to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-base/90 via-base/20 to-transparent" />
 
+        <img
+          src="/logo.png"
+          alt="Cinovix"
+          onClick={() => navigate('/browse')}
+          className="absolute top-6 left-6 h-9 cursor-pointer opacity-90 hover:opacity-100 transition"
+        />
+
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md ring-1 ring-white/10 text-white text-sm font-medium hover:bg-black/60 transition cursor-pointer"
+          className="absolute top-6 right-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md ring-1 ring-white/10 text-white text-sm font-medium hover:bg-black/60 transition cursor-pointer"
         >
           ← Back
         </button>
@@ -287,6 +300,16 @@ function Watch() {
             </div>
           </div>
         )}
+        {similar.length > 0 && (
+        <div className="mt-14">
+          <h3 className="font-display text-xl font-semibold text-white mb-4">More Like This</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-10">
+            {similar.slice(0, 12).map((item) => (
+              <TitleCard key={item.id} item={item} />
+            ))}
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

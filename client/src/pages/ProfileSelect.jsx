@@ -79,7 +79,12 @@ function ProfileSelect() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-16">
-      <h1 className="font-display text-2xl md:text-3xl font-bold text-aurora mb-2">Cinovix</h1>
+      <img
+        src="/logo.png"
+        alt="Cinovix"
+        onClick={() => navigate('/browse')}
+        className="h-9 cursor-pointer"
+      />
       <h2 className="font-display text-3xl md:text-4xl font-semibold text-white mb-12">
         Who's watching?
       </h2>
