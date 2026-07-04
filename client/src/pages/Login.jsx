@@ -33,23 +33,23 @@ function Login() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '100px auto', padding: '20px' }}>
-      <h1>Cinovix</h1>
-      <h2>{isSignup ? 'Sign Up' : 'Login'}</h2>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <h1 className="font-display text-4xl font-bold text-aurora mb-1">Cinovix</h1>
+        <p className="text-muted text-sm mb-8">
+          {isSignup ? 'Create your account' : 'Welcome back'}
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '10px' }}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ width: '100%', padding: '10px' }}
+            className="w-full px-4 py-3 rounded-lg bg-surface border border-white/10 text-white placeholder-muted focus:outline-none focus:border-violet transition"
           />
-        </div>
 
-        <div style={{ marginBottom: '10px' }}>
           <input
             type="password"
             placeholder="Password"
@@ -57,23 +57,30 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            style={{ width: '100%', padding: '10px' }}
+            className="w-full px-4 py-3 rounded-lg bg-surface border border-white/10 text-white placeholder-muted focus:outline-none focus:border-violet transition"
           />
-        </div>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p className="text-magenta text-sm">{error}</p>}
 
-        <button type="submit" disabled={loadingBtn} style={{ width: '100%', padding: '10px' }}>
-          {loadingBtn ? 'Please wait...' : isSignup ? 'Sign Up' : 'Login'}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loadingBtn}
+            className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet to-magenta hover:opacity-90 disabled:opacity-50 transition"
+          >
+            {loadingBtn ? 'Please wait...' : isSignup ? 'Sign Up' : 'Login'}
+          </button>
+        </form>
 
-      <p style={{ marginTop: '15px' }}>
-        {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
-        <button onClick={() => setIsSignup(!isSignup)} style={{ cursor: 'pointer' }}>
-          {isSignup ? 'Login' : 'Sign Up'}
-        </button>
-      </p>
+        <p className="text-muted text-sm mt-6 text-center">
+          {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+          <button
+            onClick={() => setIsSignup(!isSignup)}
+            className="text-cyan font-medium hover:underline"
+          >
+            {isSignup ? 'Login' : 'Sign Up'}
+          </button>
+        </p>
+      </div>
     </div>
   );
 }

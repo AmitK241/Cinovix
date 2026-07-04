@@ -7,6 +7,7 @@ import Search from './pages/Search';
 import MyList from './pages/MyList';
 import ProfileSelect from './pages/ProfileSelect';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Subscription from './pages/Subscription';
 
 function App() {
   return (
@@ -50,6 +51,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProfileSelect />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/subscription"
+        element={
+          <ProtectedRoute>
+            <Subscription />
           </ProtectedRoute>
         }
       />

@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema(
       enum: ['free', 'basic', 'standard', 'premium'],
       default: 'free',
     },
+    subscriptionStatus: {
+      type: String,
+      enum: ['none', 'created', 'active', 'cancelled', 'completed'],
+      default: 'none',
+    },
     myList: [
       {
         tmdbId: { type: Number, required: true },

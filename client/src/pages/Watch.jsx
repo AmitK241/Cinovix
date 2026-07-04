@@ -46,7 +46,6 @@ function Watch() {
     content?.videos?.results?.find((v) => v.type === 'Trailer' && v.site === 'YouTube') ||
     content?.videos?.results?.find((v) => v.type === 'Teaser' && v.site === 'YouTube');
 
-  // Load YouTube IFrame API and create player once trailer + content are ready
   useEffect(() => {
     if (!trailer) return;
 
@@ -136,78 +135,159 @@ function Watch() {
   };
 
   if (loading) {
-    return <div style={{ padding: '20px', color: 'white', backgroundColor: '#141414', minHeight: '100vh' }}>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-aurora font-display text-xl font-semibold animate-pulse">Loading...</p>
+      </div>
+    );
   }
 
   if (!content) {
-    return <div style={{ padding: '20px', color: 'white', backgroundColor: '#141414', minHeight: '100vh' }}>Content not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-white">Content not found</p>
+      </div>
+    );
   }
 
   const cast = content.credits?.cast?.slice(0, 6) || [];
+  const backdropUrl = content.backdrop_path
+    ? `https://image.tmdb.org/t/p/original${content.backdrop_path}`
+    : content.poster_path
+    ? `https://image.tmdb.org/t/p/original${content.poster_path}`
+    : null;
+  const year = content.release_date?.split('-')[0];
 
   return (
-    <div style={{ backgroundColor: '#141414', color: 'white', minHeight: '100vh', padding: '20px' }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: '20px' }}>
-        ← Back
-      </button>
+    <div className="min-h-screen pb-20">
+      {/* Hero backdrop */}
+      <div className="relative w-full h-[65vh] min-h-[420px]">
+        {backdropUrl && (
+          <img
+            src={backdropUrl}
+            alt={content.title}
+            className="absolute inset-0 w-full h-full object-cover object-[center_20%]"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-base from-10% via-base/70 via-50% to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-base/90 via-base/20 to-transparent" />
 
-      <h1>{content.title}</h1>
-      <p style={{ opacity: 0.7 }}>
-        {content.release_date?.split('-')[0]} • {content.runtime} min • ⭐ {content.vote_average?.toFixed(1)}
-      </p>
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md ring-1 ring-white/10 text-white text-sm font-medium hover:bg-black/60 transition cursor-pointer"
+        >
+          ← Back
+        </button>
 
-      <button onClick={handleMyListToggle} disabled={listLoading} style={{ margin: '10px 0', padding: '8px 16px' }}>
-        {listLoading ? 'Please wait...' : inMyList ? '✓ Remove from My List' : '+ Add to My List'}
-      </button>
+        <div className="absolute bottom-0 left-0 right-0 px-6 md:px-12 pb-10">
+          <div className="w-12 h-1 rounded-full bg-gradient-to-r from-violet via-magenta to-cyan mb-4" />
 
-      {trailer ? (
-        <div style={{ margin: '20px 0', maxWidth: '800px' }}>
-          <div id="yt-player"></div>
-          {savedProgress?.progressSeconds > 0 && (
-            <p style={{ fontSize: '13px', opacity: 0.6 }}>Resuming from where you left off</p>
-          )}
-        </div>
-      ) : (
-        <div style={{ margin: '20px 0' }}>
-          <p style={{ opacity: 0.6 }}>Trailer not available on TMDB</p>
-          
-            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(content.title + ' official trailer')}`}
-            target="_blank"
-            rel="noreferrer"
-            style={{ color: '#e50914' }}
-          <a>
-            Search on YouTube →
-          </a>
-        </div>
-      )}
+          <h1 className="font-display text-4xl md:text-6xl font-bold text-white mb-4 max-w-2xl drop-shadow-lg">
+            {content.title}
+          </h1>
 
-      <h3>Overview</h3>
-      <p style={{ maxWidth: '700px' }}>{content.overview}</p>
-
-      <h3 style={{ marginTop: '20px' }}>Genres</h3>
-      <p>{content.genres?.map((g) => g.name).join(', ')}</p>
-
-      {cast.length > 0 && (
-        <>
-          <h3 style={{ marginTop: '20px' }}>Cast</h3>
-          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-            {cast.map((actor) => (
-              <div key={actor.id} style={{ textAlign: 'center', width: '100px' }}>
-                <img
-                  src={
-                    actor.profile_path
-                      ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                      : 'https://via.placeholder.com/100x150?text=No+Image'
-                  }
-                  alt={actor.name}
-                  style={{ width: '100%', borderRadius: '4px' }}
-                />
-                <p style={{ fontSize: '12px', marginTop: '4px' }}>{actor.name}</p>
-              </div>
-            ))}
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            {year && (
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/80 ring-1 ring-white/10">
+                {year}
+              </span>
+            )}
+            {content.runtime > 0 && (
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white/80 ring-1 ring-white/10">
+                {content.runtime} min
+              </span>
+            )}
+            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-400/15 text-yellow-400 ring-1 ring-yellow-400/20">
+              ★ {content.vote_average?.toFixed(1)}
+            </span>
           </div>
-        </>
-      )}
+
+          <button
+            onClick={handleMyListToggle}
+            disabled={listLoading}
+            className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition cursor-pointer disabled:opacity-50 shadow-lg ${
+              inMyList
+                ? 'bg-white/10 border border-white/20 text-white hover:bg-white/20'
+                : 'bg-gradient-to-r from-violet via-magenta to-cyan text-white hover:opacity-90 shadow-violet/30'
+            }`}
+          >
+            {listLoading ? 'Please wait...' : inMyList ? '✓ In My List' : '+ Add to My List'}
+          </button>
+        </div>
+      </div>
+
+      {/* Content section */}
+      <div className="px-6 md:px-12 pt-10 max-w-4xl">
+        {trailer ? (
+          <div className="mb-10">
+            <h3 className="font-display text-xl font-semibold text-white mb-4">Trailer</h3>
+            <div className="aurora-border rounded-xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
+              <div id="yt-player" className="aspect-video w-full bg-surface" />
+            </div>
+            {savedProgress?.progressSeconds > 0 && (
+              <p className="text-cyan text-xs mt-3">▶ Resuming from where you left off</p>
+            )}
+          </div>
+        ) : (
+          <div className="mb-10 p-6 rounded-xl bg-surface ring-1 ring-white/5">
+            <p className="text-muted mb-3">Trailer not available on TMDB</p>
+            <a
+              href={`https://www.youtube.com/results?search_query=${encodeURIComponent(content.title + ' official trailer')}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-cyan font-medium hover:underline"
+            >
+              Search on YouTube →
+            </a>
+          </div>
+        )}
+
+        <h3 className="font-display text-xl font-semibold text-white mb-3">Overview</h3>
+        <p className="text-white/70 leading-relaxed mb-8">{content.overview}</p>
+
+        {content.genres?.length > 0 && (
+          <div className="mb-10">
+            <h3 className="font-display text-xl font-semibold text-white mb-3">Genres</h3>
+            <div className="flex flex-wrap gap-2">
+              {content.genres.map((g, i) => {
+                const colors = ['from-violet to-magenta', 'from-magenta to-cyan', 'from-cyan to-violet'];
+                return (
+                  <span
+                    key={g.id}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-gradient-to-r ${colors[i % 3]} opacity-90`}
+                  >
+                    {g.name}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {cast.length > 0 && (
+          <div>
+            <h3 className="font-display text-xl font-semibold text-white mb-4">Cast</h3>
+            <div className="flex gap-5 flex-wrap">
+              {cast.map((actor) => (
+                <div key={actor.id} className="text-center w-24 group">
+                  <div className="rounded-lg overflow-hidden ring-1 ring-white/10 group-hover:ring-violet/50 mb-2 aspect-[2/3] transition">
+                    <img
+                      src={
+                        actor.profile_path
+                          ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
+                          : 'https://via.placeholder.com/200x300/16141F/8B8B96?text=No+Image'
+                      }
+                      alt={actor.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    />
+                  </div>
+                  <p className="text-xs text-white/70 truncate">{actor.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
