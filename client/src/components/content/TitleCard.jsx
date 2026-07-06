@@ -5,7 +5,7 @@ function TitleCard({ item }) {
 
   const imageUrl = item.poster_path
     ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
-    : 'https://via.placeholder.com/342x513/16141F/8B8B96?text=No+Image';
+    : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"%3E%3Crect width="200" height="300" fill="%2316141F"/%3E%3Ctext x="50%25" y="50%25" font-size="14" fill="%238B8B96" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E'
 
   const handleClick = () => {
     navigate(`/watch/${item.id}`);

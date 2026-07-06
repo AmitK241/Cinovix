@@ -65,7 +65,7 @@ function Login() {
           <button
             type="submit"
             disabled={loadingBtn}
-            className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet to-magenta hover:opacity-90 disabled:opacity-50 transition"
+            className="w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet to-magenta hover:opacity-90 disabled:opacity-50 transition cursor-pointer"
           >
             {loadingBtn ? 'Please wait...' : isSignup ? 'Sign Up' : 'Login'}
           </button>
@@ -75,7 +75,7 @@ function Login() {
           {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             onClick={() => setIsSignup(!isSignup)}
-            className="text-cyan font-medium hover:underline"
+            className="text-cyan font-medium hover:underline cursor-pointer"
           >
             {isSignup ? 'Login' : 'Sign Up'}
           </button>

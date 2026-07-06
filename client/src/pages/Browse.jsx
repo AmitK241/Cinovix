@@ -6,6 +6,7 @@ import { getRecommendations } from '../services/aiService';
 import ContentRow from '../components/content/ContentRow';
 import { useProfile } from '../context/ProfileContext';
 import CategoryDropdown from '../components/navigation/CategoryDropdown';
+import NotificationBell from '../components/navigation/NotificationBell';
 
 function Browse() {
   const { user, logout } = useAuth();
@@ -94,6 +95,7 @@ function Browse() {
             <Link to="/mylist" className="text-white/80 hover:text-white text-sm font-medium transition whitespace-nowrap">
               My List
             </Link>
+            <NotificationBell />
             <Link to="/subscription" className="text-white/80 hover:text-white text-sm font-medium transition whitespace-nowrap">
               Upgrade
             </Link>

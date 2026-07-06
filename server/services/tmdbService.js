@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-console.log('TMDB KEY:', process.env.TMDB_API_KEY);   // ← ye line add karo
+
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -48,11 +48,13 @@ export const searchContent = async (query, mediaType = 'movie') => {
 };
 
 // Get details by ID (for Watch page)
+// append_to_response fetches videos + credits in a single request.
+// language: 'en-US' ensures the full English video list (trailers, teasers, etc.) is returned.
 export const getDetailsById = async (id, mediaType = 'movie') => {
   const response = await tmdbApi.get(`/${mediaType}/${id}`, {
     params: {
       append_to_response: 'videos,credits',
-      include_video_language: 'null',
+      language: 'en-US',
     },
   });
   return response.data;

@@ -10,6 +10,9 @@ import {
   getSimilarMovies,
 } from '../services/contentService';
 import TitleCard from '../components/content/TitleCard';
+import ReviewSection from '../components/content/ReviewSection';
+
+const ASSUMED_TRAILER_DURATION = 180; // approx seconds, used only for continue-watching progress bar math
 
 function Watch() {
   const { id } = useParams();
@@ -19,12 +22,29 @@ function Watch() {
   const [inMyList, setInMyList] = useState(false);
   const [listLoading, setListLoading] = useState(false);
   const [savedProgress, setSavedProgress] = useState(null);
+  const [progressLoaded, setProgressLoaded] = useState(false);
   const [similar, setSimilar] = useState([]);
 
-  const playerRef = useRef(null);
-  const intervalRef = useRef(null);
+  const elapsedRef = useRef(0);
+  const contentRef = useRef(null);
+  const idRef = useRef(id);
 
   useEffect(() => {
+    idRef.current = id;
+  }, [id]);
+
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
+
+  useEffect(() => {
+    setLoading(true);
+    setContent(null);
+    setSimilar([]);
+    setSavedProgress(null);
+    setProgressLoaded(false);
+    elapsedRef.current = 0;
+
     const fetchDetails = async () => {
       try {
         const data = await getDetails(id, 'movie');
@@ -35,6 +55,8 @@ function Watch() {
 
         const progress = await getProgressById(id);
         setSavedProgress(progress);
+        elapsedRef.current = progress?.progressSeconds || 0;
+        setProgressLoaded(true);
 
         const similarData = await getSimilarMovies(id, 'movie');
         setSimilar(similarData);
@@ -46,77 +68,57 @@ function Watch() {
     };
 
     fetchDetails();
+    window.scrollTo(0, 0);
   }, [id]);
 
-  const trailer =
-    content?.videos?.results?.find((v) => v.type === 'Trailer' && v.site === 'YouTube') ||
-    content?.videos?.results?.find((v) => v.type === 'Teaser' && v.site === 'YouTube');
+  // Pick the best available YouTube video: Trailer > Teaser > Clip > Featurette
+  const trailer = (() => {
+    if (!content?.videos?.results) return null;
+    const results = content.videos.results.filter((v) => v.site === 'YouTube');
+    const priority = ['Trailer', 'Teaser', 'Clip', 'Featurette'];
+    const sorted = results
+      .slice()
+      .sort((a, b) => priority.indexOf(a.type) - priority.indexOf(b.type))
+      .filter((v) => priority.includes(v.type));
+    return sorted[0] || null;
+  })();
 
+  // Approximate progress tracking using real timestamps for second-accurate results,
+  // with an immediate save on cleanup so leaving early (even <10s) is captured exactly.
+  // Waits for progressLoaded so it always starts from the correct saved base, not 0.
   useEffect(() => {
-    if (!trailer) return;
+    if (!trailer || !progressLoaded) return;
 
-    const createPlayer = () => {
-      playerRef.current = new window.YT.Player('yt-player', {
-        videoId: trailer.key,
-        events: {
-          onReady: (event) => {
-            if (savedProgress?.progressSeconds) {
-              event.target.seekTo(savedProgress.progressSeconds, true);
-            }
-          },
-          onStateChange: (event) => {
-            if (event.data === window.YT.PlayerState.PLAYING) {
-              clearInterval(intervalRef.current);
-              intervalRef.current = setInterval(saveProgress, 10000);
-            } else {
-              clearInterval(intervalRef.current);
-              if (
-                event.data === window.YT.PlayerState.PAUSED ||
-                event.data === window.YT.PlayerState.ENDED
-              ) {
-                saveProgress();
-              }
-            }
-          },
-        },
-      });
+    const baseElapsed = savedProgress?.progressSeconds || 0;
+    const startTime = Date.now();
+
+    const getCurrentElapsed = () => baseElapsed + Math.floor((Date.now() - startTime) / 1000);
+
+    const doSave = () => {
+      const currentContent = contentRef.current;
+      const currentId = idRef.current;
+      if (!currentContent) return;
+
+      const current = getCurrentElapsed();
+      elapsedRef.current = current;
+
+      updateProgress({
+        tmdbId: Number(currentId),
+        mediaType: 'movie',
+        title: currentContent.title,
+        poster_path: currentContent.poster_path,
+        progressSeconds: current,
+        durationSeconds: ASSUMED_TRAILER_DURATION,
+      }).catch((error) => console.error('Error saving progress:', error));
     };
 
-    if (window.YT && window.YT.Player) {
-      createPlayer();
-    } else {
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.body.appendChild(tag);
-      window.onYouTubeIframeAPIReady = createPlayer;
-    }
+    const save = setInterval(doSave, 10000);
 
     return () => {
-      clearInterval(intervalRef.current);
-      saveProgress();
+      clearInterval(save);
+      doSave(); // final flush with the exact elapsed time at the moment of leaving
     };
-  }, [trailer, savedProgress]);
-
-  const saveProgress = async () => {
-    if (!playerRef.current || !content) return;
-    try {
-      const progressSeconds = Math.floor(playerRef.current.getCurrentTime());
-      const durationSeconds = Math.floor(playerRef.current.getDuration());
-
-      if (progressSeconds <= 0) return;
-
-      await updateProgress({
-        tmdbId: Number(id),
-        mediaType: 'movie',
-        title: content.title,
-        poster_path: content.poster_path,
-        progressSeconds,
-        durationSeconds,
-      });
-    } catch (error) {
-      console.error('Error saving progress:', error);
-    }
-  };
+  }, [trailer, id, progressLoaded]);
 
   const handleMyListToggle = async () => {
     setListLoading(true);
@@ -163,10 +165,10 @@ function Watch() {
     ? `https://image.tmdb.org/t/p/original${content.poster_path}`
     : null;
   const year = content.release_date?.split('-')[0];
+  const startSeconds = Math.floor(savedProgress?.progressSeconds || 0);
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Hero backdrop */}
       <div className="relative w-full h-[65vh] min-h-[420px]">
         {backdropUrl && (
           <img
@@ -229,20 +231,26 @@ function Watch() {
         </div>
       </div>
 
-      {/* Content section */}
-      <div className="px-6 md:px-12 pt-10 max-w-4xl">
+      <div className="px-6 md:px-12 pt-10">
         {trailer ? (
-          <div className="mb-10">
+          <div className="mb-10 max-w-4xl">
             <h3 className="font-display text-xl font-semibold text-white mb-4">Trailer</h3>
             <div className="aurora-border rounded-xl overflow-hidden ring-1 ring-white/10 shadow-2xl">
-              <div id="yt-player" className="aspect-video w-full bg-surface" />
+              <iframe
+                key={trailer.key}
+                src={`https://www.youtube.com/embed/${trailer.key}?start=${startSeconds}`}
+                title="Trailer"
+                className="aspect-video w-full bg-surface"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </div>
-            {savedProgress?.progressSeconds > 0 && (
+            {startSeconds > 0 && (
               <p className="text-cyan text-xs mt-3">▶ Resuming from where you left off</p>
             )}
           </div>
         ) : (
-          <div className="mb-10 p-6 rounded-xl bg-surface ring-1 ring-white/5">
+          <div className="mb-10 p-6 rounded-xl bg-surface ring-1 ring-white/5 max-w-4xl">
             <p className="text-muted mb-3">Trailer not available on TMDB</p>
             <a
               href={`https://www.youtube.com/results?search_query=${encodeURIComponent(content.title + ' official trailer')}`}
@@ -255,8 +263,10 @@ function Watch() {
           </div>
         )}
 
-        <h3 className="font-display text-xl font-semibold text-white mb-3">Overview</h3>
-        <p className="text-white/70 leading-relaxed mb-8">{content.overview}</p>
+        <div className="max-w-3xl">
+          <h3 className="font-display text-xl font-semibold text-white mb-3">Overview</h3>
+          <p className="text-white/70 leading-relaxed mb-8">{content.overview}</p>
+        </div>
 
         {content.genres?.length > 0 && (
           <div className="mb-10">
@@ -288,7 +298,7 @@ function Watch() {
                       src={
                         actor.profile_path
                           ? `https://image.tmdb.org/t/p/w200${actor.profile_path}`
-                          : 'https://via.placeholder.com/200x300/16141F/8B8B96?text=No+Image'
+                          : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300"%3E%3Crect width="200" height="300" fill="%2316141F"/%3E%3Ctext x="50%25" y="50%25" font-size="14" fill="%238B8B96" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E'
                       }
                       alt={actor.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
@@ -300,16 +310,19 @@ function Watch() {
             </div>
           </div>
         )}
+
+        <ReviewSection tmdbId={id} mediaType="movie" />
+
         {similar.length > 0 && (
-        <div className="mt-14">
-          <h3 className="font-display text-xl font-semibold text-white mb-4">More Like This</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-10">
-            {similar.slice(0, 12).map((item) => (
-              <TitleCard key={item.id} item={item} />
-            ))}
+          <div className="mt-14">
+            <h3 className="font-display text-xl font-semibold text-white mb-4">More Like This</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-x-4 gap-y-10">
+              {similar.slice(0, 12).map((item) => (
+                <TitleCard key={item.id} item={item} />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

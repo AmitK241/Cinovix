@@ -10,6 +10,7 @@ import watchHistoryRoutes from './routes/watchHistoryRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 
 connectDB();
 
@@ -28,6 +29,7 @@ app.use('/api/watch-history', watchHistoryRoutes);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
