@@ -1,8 +1,7 @@
 <div align="center">
 
-<img src="./client/public/logo.png" alt="Cinovix" height="90" />
+<img src="./client/public/logo.png" alt="Cinovix" height="110" />
 
-# Cinovix
 
 **Streaming that thinks with you.**
 
