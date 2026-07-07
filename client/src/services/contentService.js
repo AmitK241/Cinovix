@@ -36,17 +36,17 @@ export const removeFromMyList = async (tmdbId) => {
 };
 
 export const updateProgress = async (data) => {
-  const response = await api.post('/history', data);
+  const response = await api.post('/watch-history', data);
   return response.data;
 };
 
 export const getProgressById = async (tmdbId) => {
-  const response = await api.get(`/history/${tmdbId}`);
+  const response = await api.get(`/watch-history/${tmdbId}`);
   return response.data;
 };
 
 export const getContinueWatching = async () => {
-  const response = await api.get('/history');
+  const response = await api.get('/watch-history');
   return response.data;
 };
 
