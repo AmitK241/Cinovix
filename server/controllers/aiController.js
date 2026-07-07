@@ -1,53 +1,54 @@
 import { analyzeUserTaste, parseSearchQuery } from '../services/aiService.js';
-import { discoverByMood } from '../services/tmdbService.js';
-import User from '../models/User.js';
+import { discoverByMood, searchContent } from '../services/tmdbService.js';
+import MyList from '../models/MyList.js';
+import WatchHistory from '../models/WatchHistory.js';
 
 export const getRecommendations = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const userId = req.user._id;
+
+    // Gather titles from watch history + my list
+    const [history, myList] = await Promise.all([
+      WatchHistory.find({ userId }).sort({ watchedAt: -1 }).limit(20),
+      MyList.find({ userId }).limit(20),
+    ]);
 
     const titles = [
-      ...user.myList.map((item) => item.title),
-      ...user.watchHistory.map((item) => item.title),
-    ].filter(Boolean);
+      ...history.map((h) => h.title).filter(Boolean),
+      ...myList.map((m) => m.title).filter(Boolean),
+    ];
 
     if (titles.length === 0) {
-      return res.status(200).json({
-        message: 'Add some movies to My List to get personalized recommendations',
-        results: [],
-      });
+      // Cold start: return popular action movies
+      const data = await discoverByMood(['Action']);
+      return res.json({ taste: null, results: data });
     }
 
-    const tasteProfile = await analyzeUserTaste(titles);
-    const results = await discoverByMood(tasteProfile.genres, null, 'movie');
-
-    res.status(200).json({
-      tasteProfile,
-      results: results.slice(0, 12),
-    });
-  } catch (error) {
-    console.error('AI Recommendation error:', error.message);
-    res.status(500).json({ message: error.message });
+    const taste = await analyzeUserTaste(titles);
+    const results = await discoverByMood(taste.genres || ['Drama']);
+    res.json({ taste, results });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const semanticSearch = async (req, res) => {
   try {
     const { query } = req.body;
-
-    if (!query) {
-      return res.status(400).json({ message: 'Query is required' });
-    }
+    if (!query) return res.status(400).json({ message: 'Query is required' });
 
     const parsed = await parseSearchQuery(query);
-    const results = await discoverByMood(parsed.genres, parsed.language, 'movie');
 
-    res.status(200).json({
-      parsed,
-      results,
-    });
-  } catch (error) {
-    console.error('Semantic search error:', error.message);
-    res.status(500).json({ message: error.message });
+    let results = [];
+    if (parsed.keywords) {
+      results = await searchContent(parsed.keywords, 'movie');
+    }
+    if (results.length === 0 && parsed.genres?.length) {
+      results = await discoverByMood(parsed.genres, parsed.language);
+    }
+
+    res.json({ parsed, results });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

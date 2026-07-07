@@ -24,7 +24,7 @@ function NotificationBell() {
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
 
-  const unreadCount = notifications.filter((n) => n.unread).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   const fetchNotifications = async () => {
     try {
@@ -55,7 +55,7 @@ function NotificationBell() {
   }, []);
 
   const markAllRead = async () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     try {
       await markAllReadApi();
     } catch (error) {
@@ -166,12 +166,12 @@ function NotificationBell() {
                 <div
                   key={notif._id}
                   className={`group relative flex items-start gap-3.5 px-5 py-4 border-b border-white/5 transition-all duration-150 ${
-                    notif.unread
+                    notif.read === false
                       ? 'bg-violet/[0.06] hover:bg-violet/[0.10]'
                       : 'hover:bg-white/[0.04]'
                   }`}
                 >
-                  {notif.unread && (
+                  {notif.read === false && (
                     <span
                       style={{ top: '50%', transform: 'translateY(-50%)', left: '14px' }}
                       className="absolute w-1.5 h-1.5 rounded-full bg-violet"
@@ -180,7 +180,7 @@ function NotificationBell() {
 
                   <div
                     className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg ${
-                      notif.unread ? 'bg-violet/15 ring-1 ring-violet/20' : 'bg-white/5'
+                      notif.read === false ? 'bg-violet/15 ring-1 ring-violet/20' : 'bg-white/5'
                     }`}
                   >
                     {notif.icon}
@@ -189,7 +189,7 @@ function NotificationBell() {
                   <div className="flex-1 min-w-0 pr-6">
                     <p
                       className={`text-[12px] font-semibold mb-0.5 ${
-                        notif.unread ? 'text-white' : 'text-white/70'
+                        notif.read === false ? 'text-white' : 'text-white/70'
                       }`}
                     >
                       {notif.title}

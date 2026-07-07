@@ -1,6 +1,10 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+let _groq = null;
+const getGroq = () => {
+  if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  return _groq;
+};
 
 // Analyze user's watch history + My List to extract preference profile
 export const analyzeUserTaste = async (titles) => {
@@ -14,9 +18,9 @@ Analyze their taste and return ONLY a JSON object (no markdown, no explanation) 
   "reasoning": "one sentence explaining the taste pattern"
 }`;
 
-  const completion = await groq.chat.completions.create({
+  const completion = await getGroq().chat.completions.create({
     messages: [{ role: 'user', content: prompt }],
-    model: 'openai/gpt-oss-120b',
+    model: 'llama-3.3-70b-versatile',
     temperature: 0.3,
   });
 
@@ -39,9 +43,9 @@ Return ONLY a JSON object (no markdown, no explanation) with this exact structur
   "language": "ISO 639-1 code if a specific film industry/language is mentioned (e.g. 'hi' for Bollywood/Hindi, 'te' for Telugu, 'ta' for Tamil, 'ko' for Korean, 'en' for Hollywood/English), otherwise null"
 }`;
 
-  const completion = await groq.chat.completions.create({
+  const completion = await getGroq().chat.completions.create({
     messages: [{ role: 'user', content: prompt }],
-    model: 'openai/gpt-oss-120b',
+    model: 'llama-3.3-70b-versatile',
     temperature: 0.3,
   });
 

@@ -11,82 +11,82 @@ import {
 
 export const trending = async (req, res) => {
   try {
-    const { mediaType } = req.query;
-    const data = await getTrending(mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { mediaType, type } = req.query;
+    const data = await getTrending(mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const byLanguage = async (req, res) => {
   try {
-    const { language, mediaType } = req.query;
-    const data = await getPopularByLanguage(language, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { language = 'en', mediaType, type } = req.query;
+    const data = await getPopularByLanguage(language, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const byGenre = async (req, res) => {
   try {
-    const { genreId, mediaType } = req.query;
-    const data = await getByGenre(genreId, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { genreId, mediaType, type } = req.query;
+    const data = await getByGenre(genreId, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const search = async (req, res) => {
   try {
-    const { query, mediaType } = req.query;
-    const data = await searchContent(query, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { query, mediaType, type } = req.query;
+    const data = await searchContent(query, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const details = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mediaType } = req.query;
-    const data = await getDetailsById(id, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { mediaType, type } = req.query;
+    const data = await getDetailsById(id, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const similar = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mediaType } = req.query;
-    const data = await getSimilarMovies(id, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { mediaType, type } = req.query;
+    const data = await getSimilarMovies(id, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const providers = async (req, res) => {
   try {
-    const { mediaType } = req.query;
-    const data = await getWatchProviders(mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { mediaType, type } = req.query;
+    const data = await getWatchProviders(mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
 export const byProvider = async (req, res) => {
   try {
-    const { providerId, mediaType } = req.query;
-    const data = await discoverByProvider(providerId, mediaType);
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const { providerId, mediaType, type } = req.query;
+    const data = await discoverByProvider(providerId, mediaType || type || 'movie');
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

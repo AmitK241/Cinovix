@@ -15,13 +15,13 @@ function ReviewSection({ tmdbId, mediaType = 'movie' }) {
   const fetchAll = async () => {
     try {
       const data = await getReviews(tmdbId);
-      setReviews(data.reviews);
-      setAvgRating(data.avgRating);
-      setTotalReviews(data.totalReviews);
+      setReviews(data?.reviews || []);
+      setAvgRating(data?.avgRating || 0);
+      setTotalReviews(data?.totalReviews || 0);
 
       const mine = await getMyReview(tmdbId);
       if (mine) {
-        setMyRating(mine.rating);
+        setMyRating(mine.rating || 0);
         setMyComment(mine.comment || '');
         setHasReviewed(true);
       }

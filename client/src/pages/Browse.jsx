@@ -39,12 +39,12 @@ function Browse() {
         const mappedContinue = continueData.map((item) => ({
           id: item.tmdbId,
           title: item.title,
-          poster_path: item.poster_path,
+          poster_path: item.posterPath,
         }));
         setContinueWatching(mappedContinue);
 
         setRecommended(aiData.results || []);
-        setTasteReason(aiData.tasteProfile?.reasoning || '');
+        setTasteReason(aiData.taste?.reasoning || '');
       } catch (error) {
         console.error('Error fetching content:', error);
       } finally {

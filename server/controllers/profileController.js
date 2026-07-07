@@ -1,53 +1,38 @@
-import Profile from '../models/Profile.js';
+import User from '../models/User.js';
 
-// @desc  Get all profiles for logged-in user
-// @route GET /api/profiles
 export const getProfiles = async (req, res) => {
   try {
-    const profiles = await Profile.find({ userId: req.user._id });
-    res.status(200).json(profiles);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const user = await User.findById(req.user._id).select('profiles');
+    res.json(user.profiles);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc  Create a new profile
-// @route POST /api/profiles
 export const createProfile = async (req, res) => {
   try {
-    const { name, avatar, isKid } = req.body;
-
-    const existingCount = await Profile.countDocuments({ userId: req.user._id });
-    if (existingCount >= 5) {
+    const { name, avatar } = req.body;
+    const user = await User.findById(req.user._id);
+    if (user.profiles.length >= 5)
       return res.status(400).json({ message: 'Maximum 5 profiles allowed' });
-    }
 
-    const profile = await Profile.create({
-      userId: req.user._id,
-      name,
-      avatar,
-      isKid,
-    });
-
-    res.status(201).json(profile);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    user.profiles.push({ name, avatar: avatar || '🎬' });
+    await user.save();
+    res.status(201).json(user.profiles);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc  Delete a profile
-// @route DELETE /api/profiles/:id
 export const deleteProfile = async (req, res) => {
   try {
-    const profile = await Profile.findOne({ _id: req.params.id, userId: req.user._id });
-
-    if (!profile) {
-      return res.status(404).json({ message: 'Profile not found' });
-    }
-
-    await profile.deleteOne();
-    res.status(200).json({ message: 'Profile deleted' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const user = await User.findById(req.user._id);
+    user.profiles = user.profiles.filter(
+      (p) => p._id.toString() !== req.params.id
+    );
+    await user.save();
+    res.json(user.profiles);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

@@ -1,63 +1,54 @@
-import User from '../models/User.js';
+import WatchHistory from '../models/WatchHistory.js';
 
-// @desc  Get watch history (continue watching list)
-// @route GET /api/watch-history
 export const getWatchHistory = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
-    // Only return items that aren't fully finished (< 95% watched)
-    const inProgress = user.watchHistory.filter(
-      (item) => item.durationSeconds > 0 && item.progressSeconds / item.durationSeconds < 0.95
-    );
-    // Most recent first
-    inProgress.sort((a, b) => new Date(b.lastWatched) - new Date(a.lastWatched));
-    res.status(200).json(inProgress);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const history = await WatchHistory.find({ userId: req.user._id })
+      .sort({ watchedAt: -1 })
+      .limit(50);
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc  Update/create progress for a title
-// @route POST /api/watch-history
 export const updateProgress = async (req, res) => {
   try {
-    const { tmdbId, mediaType, title, poster_path, progressSeconds, durationSeconds } = req.body;
+    const {
+      tmdbId, mediaType, title,
+      poster_path, posterPath,          // accept either casing
+      progressSeconds, durationSeconds, // Watch.jsx sends these
+      progress,                         // legacy field
+    } = req.body;
 
-    const user = await User.findById(req.user._id);
-
-    const existingIndex = user.watchHistory.findIndex((item) => item.tmdbId === tmdbId);
-
-    if (existingIndex !== -1) {
-      user.watchHistory[existingIndex].progressSeconds = progressSeconds;
-      user.watchHistory[existingIndex].durationSeconds = durationSeconds;
-      user.watchHistory[existingIndex].lastWatched = new Date();
-    } else {
-      user.watchHistory.push({
+    const entry = await WatchHistory.findOneAndUpdate(
+      { userId: req.user._id, tmdbId },
+      {
+        userId: req.user._id,
         tmdbId,
-        mediaType,
+        mediaType: mediaType || 'movie',
         title,
-        poster_path,
-        progressSeconds,
-        durationSeconds,
-      });
-    }
-
-    await user.save();
-    res.status(200).json({ message: 'Progress updated' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+        posterPath: posterPath || poster_path || null,
+        progress: typeof progress === 'number' ? progress : 0,
+        progressSeconds: progressSeconds || 0,
+        durationSeconds: durationSeconds || 0,
+        watchedAt: new Date(),
+      },
+      { upsert: true, new: true }
+    );
+    res.status(201).json(entry);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// @desc  Get progress for a specific title (to resume)
-// @route GET /api/watch-history/:tmdbId
 export const getProgressById = async (req, res) => {
   try {
-    const { tmdbId } = req.params;
-    const user = await User.findById(req.user._id);
-    const item = user.watchHistory.find((i) => i.tmdbId === Number(tmdbId));
-    res.status(200).json(item || null);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const entry = await WatchHistory.findOne({
+      userId: req.user._id,
+      tmdbId: Number(req.params.tmdbId),
+    });
+    res.json(entry || null);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
