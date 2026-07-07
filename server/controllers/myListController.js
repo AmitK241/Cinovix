@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+import { createNotification } from '../services/notificationService.js';
 
 // @desc  Get user's My List
 // @route GET /api/mylist
@@ -26,6 +27,11 @@ export const addToMyList = async (req, res) => {
 
     user.myList.push({ tmdbId, mediaType, title, poster_path });
     await user.save();
+    await createNotification(req.user._id, {
+      icon: '✅',
+      title: 'Added to Watchlist',
+      message: `'${title}' was successfully saved to your My List.`,
+    });
 
     res.status(201).json(user.myList);
   } catch (error) {

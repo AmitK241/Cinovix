@@ -56,6 +56,11 @@ export const verifySubscriptionPayment = async (req, res) => {
     user.subscriptionPlan = plan;
     user.subscriptionStatus = 'active';
     await user.save();
+    await createNotification(req.user._id, {
+      icon: '🎬',
+      title: 'Subscription Activated',
+      message: `Your ${plan} plan is now active. Enjoy premium features!`,
+    });
 
     res.status(200).json({
       message: 'Subscription activated',
