@@ -2,12 +2,22 @@
 
 <img src="./client/public/logo.png" alt="Cinovix" height="110" />
 
+### Streaming that thinks with you.
 
-**Streaming that thinks with you.**
+**An AI-powered streaming platform that learns your taste, understands natural language search, and helps you discover what to watch next — across Bollywood, Hollywood, and regional cinema.**
 
-An AI-powered streaming platform that learns your taste, understands natural language search, and helps you discover what to watch next — across Bollywood, Hollywood, and regional cinema.
+<br/>
 
-[Live Demo](#) · [Report Bug](#) · [Request Feature](#)
+[![Live Demo](https://img.shields.io/badge/🎬_Live_Demo-cinovix.vercel.app-7C3AED?style=for-the-badge)](https://cinovix.vercel.app/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)](#)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)](#)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](#)
+[![Groq](https://img.shields.io/badge/AI-Groq_LLM-EC4899?style=flat-square)](#)
+[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](#)
+
+<br/>
+
+**[🔗 Try the Live App](https://cinovix.vercel.app/)** &nbsp;|&nbsp; **[📂 View Source](https://github.com/AmitK241/Cinovix)**
 
 </div>
 
@@ -15,57 +25,63 @@ An AI-powered streaming platform that learns your taste, understands natural lan
 
 ## 📖 Overview
 
-Cinovix is a full-stack, AI-driven streaming platform built as a portfolio project to demonstrate production-grade engineering across the MERN stack, LLM integration, and modern frontend design. Unlike typical "Netflix clone" tutorials, Cinovix goes beyond a static content grid — it ships with a working AI recommendation engine, natural language semantic search, a subscription billing flow, and a fully custom design system.
+Cinovix is a full-stack, AI-driven streaming platform built to demonstrate production-grade engineering across the MERN stack, LLM integration, and modern frontend design. Unlike typical "Netflix clone" tutorials, Cinovix goes beyond a static content grid — it ships with a **working AI recommendation engine**, **natural language semantic search**, a **subscription billing flow**, and a **fully custom design system** built from scratch.
 
-> **Note:** Cinovix uses TMDB for content metadata (posters, cast, trailers) and does not stream copyrighted full-length films. This mirrors real-world constraints — actual movie licensing requires studio deals that are out of scope for a portfolio project. Trailer playback, AI recommendations, and all other features are fully functional with real data.
+> **A note on content:** Cinovix uses [TMDB](https://www.themoviedb.org/) for content metadata (posters, cast, trailers, watch-provider availability) and does not stream copyrighted full-length films — real movie licensing requires studio deals that are out of scope for a project like this. Trailer playback, AI recommendations, reviews, and every other feature below are fully functional with real, live data.
+
+<br/>
+
+<div align="center">
+<i>🎥 Add a screenshot or short screen-recording GIF of the Browse page here for maximum impact</i>
+</div>
+
+<br/>
 
 ---
 
 ## ✨ Features
 
-### Core Streaming Experience
-- 🔐 **Authentication** — JWT-based signup/login with protected routes
-- 👥 **Multi-Profile System** — up to 5 profiles per account with custom avatars
-- 🎬 **Browse & Discover** — trending, regional cinema (Bollywood, Hollywood, Tollywood, Kollywood, Mollywood, Sandalwood), and platform-based browsing (Netflix, Prime Video, JioHotstar, ZEE5)
-- 🔍 **Search** — keyword search with debouncing
-- ▶️ **Watch Page** — trailer playback, cast, genres, similar titles, and ratings
-- 📌 **My List** — save titles to watch later
-- ⏱️ **Continue Watching** — resume trailers from where you left off
-- ⭐ **Ratings & Reviews** — users can rate and review titles
+<table>
+<tr>
+<td width="50%" valign="top">
 
-### AI-Powered (Groq + LLM)
-- 🎯 **AI Recommendation Engine** — analyzes watch history and saved titles to build a taste profile, then surfaces personalized recommendations
-- 💬 **Semantic Search** — natural language queries like *"a sad emotional bollywood drama"* are parsed by an LLM into structured filters and matched against content
+### 🎬 Core Streaming Experience
+- 🔐 JWT authentication with protected routes
+- 👥 Multi-profile system (up to 5 profiles, custom avatars)
+- 🎬 Browse by trending, region (Bollywood, Hollywood, Tollywood, Kollywood, Mollywood, Sandalwood), or platform (Netflix, Prime Video, JioHotstar, ZEE5)
+- 🔍 Debounced keyword search
+- ▶️ Watch page — trailer, cast, genres, similar titles
+- 📌 My List (watchlist)
+- ⏱️ Continue Watching with resume
+- ⭐ Ratings & reviews
 
-### Platform Features
-- 💳 **Subscription Billing** — simulated payment gateway flow (Basic / Standard / Premium plans) demonstrating checkout, verification, and plan management architecture
-- 🔔 **Notifications** — real-time-ish notification system for watchlist adds, subscription changes, and recommendations
-- 🎨 **Custom Design System** — "Aurora" theme: a distinctive violet–magenta–cyan gradient identity, glassmorphism, and micro-interactions (not a Netflix clone visually)
+</td>
+<td width="50%" valign="top">
+
+### 🤖 AI-Powered (Groq LLM)
+- 🎯 **AI Recommendation Engine** — builds a taste profile from watch history and surfaces personalized picks
+- 💬 **Semantic Search** — *"a sad emotional bollywood drama"* is parsed into structured filters and matched against real content
+
+### 💼 Platform Features
+- 💳 Simulated subscription billing (Basic/Standard/Premium)
+- 🔔 Live notification system
+- 🎨 Custom **"Aurora"** design system — violet–magenta–cyan gradients, glassmorphism, micro-interactions
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend**
-- React 19 (Vite)
-- React Router
-- Tailwind CSS v4
-- Axios
-
-**Backend**
-- Node.js + Express
-- MongoDB Atlas + Mongoose
-- JWT Authentication (bcrypt password hashing)
-
-**AI / LLM**
-- Groq API (`openai/gpt-oss-120b`) — taste analysis & semantic query parsing
-
-**External APIs**
-- TMDB (The Movie Database) — content metadata, trailers, watch providers
-- YouTube (iframe embed) — trailer playback
-
-**Other**
-- Simulated payment gateway (Razorpay-pattern architecture, mock implementation)
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 19 (Vite), React Router, Tailwind CSS v4, Axios |
+| **Backend** | Node.js, Express, MongoDB Atlas, Mongoose, JWT, bcrypt |
+| **AI / LLM** | Groq API (`openai/gpt-oss-120b`) — taste analysis & query parsing |
+| **External APIs** | TMDB (metadata, trailers, watch providers), YouTube (embed playback) |
+| **Deployment** | Vercel (frontend) · Render (backend) |
 
 ---
 
@@ -75,37 +91,33 @@ Cinovix is a full-stack, AI-driven streaming platform built as a portfolio proje
 Cinovix/
 ├── client/                 # React frontend (Vite)
 │   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   │   ├── auth/
-│   │   │   ├── content/
-│   │   │   ├── navigation/
-│   │   │   └── subscription/
+│   │   ├── components/     # auth, content, navigation, subscription
 │   │   ├── pages/          # Route-level pages
-│   │   ├── context/        # Auth & Profile context providers
-│   │   ├── services/       # API service layer (axios)
-│   │   ├── hooks/          # Custom hooks (useDebounce, etc.)
+│   │   ├── context/        # Auth & Profile providers
+│   │   ├── services/       # Axios API layer
+│   │   ├── hooks/          # useDebounce, etc.
 │   │   └── data/
 │   └── public/
 │
-├── server/                  # Node/Express backend
-│   ├── config/               # DB connection
-│   ├── models/                # Mongoose schemas
-│   ├── controllers/            # Route handlers
-│   ├── routes/                   # Express routers
-│   ├── middleware/                 # Auth middleware
-│   └── services/                    # TMDB, AI (Groq), subscription services
+├── server/                 # Node/Express backend
+│   ├── config/              # DB connection
+│   ├── models/               # Mongoose schemas
+│   ├── controllers/           # Route handlers
+│   ├── routes/                  # Express routers
+│   ├── middleware/                # Auth middleware
+│   └── services/                    # TMDB, Groq AI, subscription logic
 │
 └── README.md
 ```
 
-**Request flow example — AI Semantic Search:**
+**Request flow — AI Semantic Search:**
 
 ```
-User types query → Frontend (Search.jsx)
+User types query → Search.jsx
   → POST /api/ai/search → aiController.js
     → Groq LLM parses query into { keywords, genres, language }
-      → TMDB /discover endpoint filtered by parsed params
-        → Results returned to frontend → rendered as content grid
+      → TMDB /discover filtered by parsed params
+        → Results rendered as a content grid
 ```
 
 ---
@@ -115,45 +127,43 @@ User types query → Frontend (Search.jsx)
 ### Prerequisites
 - Node.js (v18+)
 - MongoDB Atlas account (free tier)
-- TMDB API key ([themoviedb.org](https://www.themoviedb.org/settings/api))
-- Groq API key ([console.groq.com](https://console.groq.com))
+- [TMDB API key](https://www.themoviedb.org/settings/api)
+- [Groq API key](https://console.groq.com)
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/AmitK241/Cinovix.git
-   cd Cinovix
-   ```
+```bash
+git clone https://github.com/AmitK241/Cinovix.git
+cd Cinovix
+```
 
-2. **Set up the backend**
-   ```bash
-   cd server
-   npm install
-   ```
+**Backend:**
+```bash
+cd server
+npm install
+```
 
-   Create a `.env` file in `server/`:
-   ```
-   PORT=5000
-   MONGO_URI=your_mongodb_atlas_connection_string
-   JWT_SECRET=your_random_secret_string
-   TMDB_API_KEY=your_tmdb_api_key
-   GROQ_API_KEY=your_groq_api_key
-   ```
+Create `server/.env`:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_random_secret_string
+TMDB_API_KEY=your_tmdb_api_key
+GROQ_API_KEY=your_groq_api_key
+```
 
-   Start the server:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev
+```
 
-3. **Set up the frontend**
-   ```bash
-   cd ../client
-   npm install
-   npm run dev
-   ```
+**Frontend:**
+```bash
+cd ../client
+npm install
+npm run dev
+```
 
-4. Open `http://localhost:5173` in your browser.
+Open `http://localhost:5173`.
 
 ---
 
@@ -161,35 +171,34 @@ User types query → Frontend (Search.jsx)
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/auth/signup` | Register a new user |
-| POST | `/api/auth/login` | Login and receive JWT |
-| GET | `/api/content/trending` | Get trending movies |
+| POST | `/api/auth/signup` \| `/login` | Register / login |
+| GET | `/api/content/trending` | Trending movies |
 | GET | `/api/content/search` | Keyword search |
-| GET | `/api/content/:id` | Movie details (trailer, cast, genres) |
+| GET | `/api/content/:id` | Details (trailer, cast, genres) |
 | GET | `/api/content/:id/similar` | Similar titles |
-| GET | `/api/content/providers` | List of streaming platforms |
+| GET | `/api/content/providers` | Streaming platform list |
 | POST | `/api/ai/search` | Natural language semantic search |
-| GET | `/api/ai/recommendations` | AI-generated personalized recommendations |
-| GET/POST/DELETE | `/api/mylist` | Manage My List |
-| GET/POST | `/api/watch-history` | Continue Watching progress |
-| GET/POST/DELETE | `/api/reviews/:tmdbId` | Ratings & reviews |
+| GET | `/api/ai/recommendations` | AI recommendations |
+| ALL | `/api/mylist` | Watchlist CRUD |
+| GET/POST | `/api/watch-history` | Continue Watching |
+| ALL | `/api/reviews/:tmdbId` | Ratings & reviews |
 | POST | `/api/subscription/create` \| `/verify` \| `/cancel` | Subscription flow |
-| GET/PATCH/DELETE | `/api/notifications` | Notification system |
+| ALL | `/api/notifications` | Notifications |
 
-All routes except `/auth/*` require a `Bearer <token>` header.
+All routes except `/auth/*` require an `Authorization: Bearer <token>` header.
 
 ---
 
 ## 🎨 Design Philosophy
 
-Cinovix deliberately avoids visually copying existing streaming platforms. The **"Aurora"** design language uses a violet → magenta → cyan gradient system, glassmorphism panels, and subtle motion to create a distinct, AI-forward identity — reflecting that the product's core differentiator is intelligence, not just content browsing.
+Cinovix deliberately avoids visually copying existing streaming platforms. The **"Aurora"** design language — a violet → magenta → cyan gradient system with glassmorphism panels and subtle motion — reflects that the product's core differentiator is *intelligence*, not just content browsing.
 
 ---
 
 ## 🧪 Known Limitations
 
-- Full movie playback is intentionally out of scope (see note above) — trailers are used to demonstrate the video experience
-- Subscription payments are simulated (no real payment gateway is charged)
+- Full movie playback is intentionally out of scope — trailers demonstrate the video experience (see note above)
+- Subscription payments are simulated; no real payment gateway is charged
 - AI features depend on Groq API availability and free-tier rate limits
 
 ---
@@ -200,8 +209,10 @@ Cinovix deliberately avoids visually copying existing streaming platforms. The *
 B.Tech CSE, MNNIT Allahabad
 [GitHub](https://github.com/AmitK241) · [LinkedIn](https://linkedin.com/in/amit-kumar-3a602a289)
 
----
+<div align="center">
 
-## 📄 License
+<br/>
 
-This project is built for educational and portfolio purposes.
+⭐ **If you found this project interesting, consider giving it a star!**
+
+</div>
