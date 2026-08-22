@@ -24,27 +24,38 @@ function Browse() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const [trendingData, bollywoodData, hollywoodData, continueData, aiData] = await Promise.all([
-          getTrending('movie'),
-          getByLanguage('hi', 'movie'),
-          getByLanguage('en', 'movie'),
-          getContinueWatching(),
-          getRecommendations(),
-        ]);
+        const [trendingRes, bollywoodRes, hollywoodRes, continueRes, aiRes] =
+          await Promise.allSettled([
+            getTrending('movie'),
+            getByLanguage('hi', 'movie'),
+            getByLanguage('en', 'movie'),
+            getContinueWatching(),
+            getRecommendations(),
+          ]);
 
-        setTrending(trendingData);
-        setBollywood(bollywoodData);
-        setHollywood(hollywoodData);
+        if (trendingRes.status === 'fulfilled' && Array.isArray(trendingRes.value)) {
+          setTrending(trendingRes.value);
+        }
+        if (bollywoodRes.status === 'fulfilled' && Array.isArray(bollywoodRes.value)) {
+          setBollywood(bollywoodRes.value);
+        }
+        if (hollywoodRes.status === 'fulfilled' && Array.isArray(hollywoodRes.value)) {
+          setHollywood(hollywoodRes.value);
+        }
 
-        const mappedContinue = continueData.map((item) => ({
-          id: item.tmdbId,
-          title: item.title,
-          poster_path: item.posterPath,
-        }));
-        setContinueWatching(mappedContinue);
+        if (continueRes.status === 'fulfilled' && Array.isArray(continueRes.value)) {
+          const mappedContinue = continueRes.value.map((item) => ({
+            id: item.tmdbId,
+            title: item.title,
+            poster_path: item.posterPath,
+          }));
+          setContinueWatching(mappedContinue);
+        }
 
-        setRecommended(aiData.results || []);
-        setTasteReason(aiData.taste?.reasoning || '');
+        if (aiRes.status === 'fulfilled' && aiRes.value) {
+          setRecommended(aiRes.value.results || []);
+          setTasteReason(aiRes.value.taste?.reasoning || '');
+        }
       } catch (error) {
         console.error('Error fetching content:', error);
       } finally {

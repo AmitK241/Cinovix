@@ -7,28 +7,35 @@ function Category() {
   const [searchParams] = useSearchParams();
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const type = searchParams.get('type');
   const value = searchParams.get('value');
   const label = searchParams.get('label') || 'Results';
 
-  useEffect(() => {
-    const fetchResults = async () => {
-      setLoading(true);
-      try {
-        const data =
-          type === 'provider'
-            ? await getByProvider(value, 'movie')
-            : await getByLanguage(value, 'movie');
-        setResults(data);
-      } catch (error) {
-        console.error('Error fetching category:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchResults = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data =
+        type === 'provider'
+          ? await getByProvider(value, 'movie')
+          : await getByLanguage(value, 'movie');
+      setResults(Array.isArray(data) ? data : (data?.results || []));
+    } catch (err) {
+      console.error('Error fetching category:', err);
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        'Unable to load category content. Please check your connection or try again.';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchResults();
   }, [type, value]);
 
@@ -52,7 +59,24 @@ function Category() {
         <h2 className="font-display text-3xl font-bold text-white mb-8">{label}</h2>
 
         {loading ? (
-          <p className="text-muted animate-pulse">Loading...</p>
+          <div className="flex items-center gap-3">
+            <div className="w-5 h-5 border-2 border-cyan border-t-transparent rounded-full animate-spin" />
+            <p className="text-muted animate-pulse">Loading {label} content...</p>
+          </div>
+        ) : error ? (
+          <div className="aurora-border glass-card rounded-xl p-6 max-w-lg">
+            <div className="flex items-center gap-2 text-magenta font-semibold mb-2">
+              <span>⚠️</span>
+              <span>Failed to load content</span>
+            </div>
+            <p className="text-sm text-white/70 mb-4">{error}</p>
+            <button
+              onClick={fetchResults}
+              className="px-4 py-2 bg-gradient-to-r from-violet to-cyan text-white text-sm font-medium rounded-lg hover:opacity-90 transition cursor-pointer"
+            >
+              Retry
+            </button>
+          </div>
         ) : results.length === 0 ? (
           <p className="text-muted">No results found.</p>
         ) : (

@@ -1,4 +1,13 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from server directory or root directory fallback
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -15,7 +24,7 @@ import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import watchHistoryRoutes from './routes/watchHistoryRoutes.js';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 // ── Middleware ──────────────────────────────────────────────────────────────
 app.use(cors({
@@ -70,8 +79,9 @@ function startServer(port, attempts = 0) {
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.warn(`⚠️  Port ${port} is in use — trying port ${port + 1}...`);
-      server.close(() => startServer(port + 1, attempts + 1));
+      const nextPort = Number(port) + 1;
+      console.warn(`⚠️  Port ${port} is in use — trying port ${nextPort}...`);
+      server.close(() => startServer(nextPort, attempts + 1));
     } else {
       console.error('❌ Server error:', err.message);
       process.exit(1);
