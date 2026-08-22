@@ -36,7 +36,7 @@ Cinovix is a full-stack, AI-driven streaming platform built to demonstrate produ
 <br/>
 
 <div align="center">
-<i>🎥 Add a screenshot or short screen-recording GIF of the Browse page here for maximum impact</i>
+<i></i>
 </div>
 
 <br/>
