@@ -2,6 +2,8 @@
 
 <img src="./client/public/logo.png" alt="Cinovix" height="110" />
 
+# Cinovix
+
 ### Streaming that thinks with you.
 
 **An AI-powered streaming platform that learns your taste, understands natural language search, and helps you discover what to watch next — across Bollywood, Hollywood, and regional cinema.**
@@ -9,15 +11,17 @@
 <br/>
 
 [![Live Demo](https://img.shields.io/badge/🎬_Live_Demo-cinovix.vercel.app-7C3AED?style=for-the-badge)](https://cinovix.vercel.app/)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)](#)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)](#)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](#)
-[![Groq](https://img.shields.io/badge/AI-Groq_LLM-EC4899?style=flat-square)](#)
-[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](#)
+[![View Source](https://img.shields.io/badge/📂_Source-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AmitK241/Cinovix)
 
 <br/>
 
-**[🔗 Try the Live App](https://cinovix.vercel.app/)** &nbsp;|&nbsp; **[📂 View Source](https://github.com/AmitK241/Cinovix)**
+[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=flat-square&logo=node.js&logoColor=white)](#)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)](#)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)](#)
+[![Groq](https://img.shields.io/badge/AI-Groq_%7C_GPT--OSS_120B-EC4899?style=flat-square)](#)
+[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](#)
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](#)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=flat-square&logo=render&logoColor=white)](#)
 
 </div>
 
@@ -58,7 +62,7 @@ Cinovix is a full-stack, AI-driven streaming platform built to demonstrate produ
 </td>
 <td width="50%" valign="top">
 
-### 🤖 AI-Powered (Groq LLM)
+### 🤖 AI-Powered (Groq · GPT-OSS 120B)
 - 🎯 **AI Recommendation Engine** — builds a taste profile from watch history and surfaces personalized picks
 - 💬 **Semantic Search** — *"a sad emotional bollywood drama"* is parsed into structured filters and matched against real content
 
@@ -79,7 +83,7 @@ Cinovix is a full-stack, AI-driven streaming platform built to demonstrate produ
 |---|---|
 | **Frontend** | React 19 (Vite), React Router, Tailwind CSS v4, Axios |
 | **Backend** | Node.js, Express, MongoDB Atlas, Mongoose, JWT, bcrypt |
-| **AI / LLM** | Groq API (`openai/gpt-oss-120b`) — taste analysis & query parsing |
+| **AI / LLM** | Groq API — [`openai/gpt-oss-120b`](https://console.groq.com/docs/models) for taste analysis & natural language query parsing |
 | **External APIs** | TMDB (metadata, trailers, watch providers), YouTube (embed playback) |
 | **Deployment** | Vercel (frontend) · Render (backend) |
 
@@ -115,7 +119,7 @@ Cinovix/
 ```
 User types query → Search.jsx
   → POST /api/ai/search → aiController.js
-    → Groq LLM parses query into { keywords, genres, language }
+    → Groq (openai/gpt-oss-120b) parses query into { keywords, genres, language }
       → TMDB /discover filtered by parsed params
         → Results rendered as a content grid
 ```
@@ -199,15 +203,26 @@ Cinovix deliberately avoids visually copying existing streaming platforms. The *
 
 - Full movie playback is intentionally out of scope — trailers demonstrate the video experience (see note above)
 - Subscription payments are simulated; no real payment gateway is charged
-- AI features depend on Groq API availability and free-tier rate limits
+- AI features depend on Groq API availability, model deprecations, and free-tier rate limits
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Watch-party / synced playback for trailers
+- [ ] Expanded regional language coverage in semantic search
+- [ ] User-facing "why this was recommended" explanation panel
+- [ ] Offline-friendly PWA support
 
 ---
 
 ## 👤 Author
 
 **Amit Kumar**
-B.Tech CSE, MNNIT Allahabad
-[GitHub](https://github.com/AmitK241) · [LinkedIn](https://linkedin.com/in/amit-kumar-3a602a289)
+Final-year B.Tech CSE, MNNIT Allahabad (Motilal Nehru National Institute of Technology, Prayagraj)
+
+[![GitHub](https://img.shields.io/badge/GitHub-AmitK241-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/AmitK241)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Amit_Kumar-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/amit-kumar-3a602a289)
 
 <div align="center">
 
